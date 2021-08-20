@@ -1,5 +1,9 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require("webpack");
 const path = require("path");
+const { addEmitHelpers } = require("typescript");
+
 const basePath = __dirname;
 
 module.exports = {
@@ -7,33 +11,43 @@ module.exports = {
   resolve: {
     extensions: [".js", ".ts", ".tsx"],
   },
-  devtool: "eval-source-map",
-  entry: {
-    app: ["./index.tsx"],
-  },
-  stats: "errors-only",
+  entry: ["@babel/polyfill", "./index.tsx"],
   output: {
-    filename: "[name].[chunkhash].js",
+    path: path.join(basePath, "dist"),
+    filename: "bundle.js",
     publicPath: "/",
   },
+  devtool: "source-map",
   devServer: {
+    contentBase: "./dist", // Content base
+    inline: true, // Enable watch and live reload
+    host: "localhost",
+    port: 8080,
+    stats: "errors-only",
     historyApiFallback: true,
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
+        loader: "awesome-typescript-loader",
+        options: {
+          useBabel: true,
+          babelCore: "@babel/core", // needed for Babel v7
+        },
       },
       {
-        test: /\.(png|jpg)$/,
-        exclude: /node_modules/,
-        loader: "url-loader?limit=5000",
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
-        test: /\.html$/,
-        loader: "html-loader",
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: "file-loader",
+        options: {
+          name: "assets/img/[name].[ext]?[hash]",
+          esModule: false,
+        },
       },
     ],
   },
@@ -42,6 +56,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: "index.html", //Name of file in ./dist/
       template: "index.html", //Name of template in ./src
+      hash: true,
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css",
     }),
   ],
 };

@@ -1,23 +1,22 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { LoginPage } from "./login";
-import { ListPage } from "./list";
-import { DetailPage } from "./detail";
+import { MainThemeProviderComponent } from "./core/themes/main/theme-provider.component";
+import { ListScene } from "./scenes/list.scene";
+import { StylesProvider } from "@material-ui/core/styles";
 
 export const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          <LoginPage />
-        </Route>
-        <Route path="/list">
-          <ListPage />
-        </Route>
-        <Route path="/detail/:id">
-          <DetailPage />
-        </Route>
-      </Switch>
-    </Router>
+    <StylesProvider injectFirst>
+      <MainThemeProviderComponent>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <ListScene />
+            </Route>
+            <Route path="/detail/:id"></Route>
+          </Switch>
+        </Router>
+      </MainThemeProviderComponent>
+    </StylesProvider>
   );
 };
