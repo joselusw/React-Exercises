@@ -5,18 +5,27 @@ import * as classes from "./app.layout.style";
 import { jsx, css } from "@emotion/react";
 
 export const AppLayout: React.FC = ({ children }) => {
-  return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" color="inherit">
-            Origin - Project tracker
-          </Typography>
+	return (
+		<div>
+			<AppBar position="static">
+				<Toolbar>
+					<Typography
+						variant="h6"
+						css={css`
+							color: black;
+						`}
+					>
+						José Luis del Pino Gallardo
+					</Typography>
 
-          <TextField label="Search field" css={classes.SearchBar} />
-        </Toolbar>
-      </AppBar>
-      {children}
-    </div>
-  );
+					<TextField
+						label="Search"
+						value="Lemoncode"
+						css={classes.SearchBar}
+					/>
+				</Toolbar>
+			</AppBar>
+			{children}
+		</div>
+	);
 };
