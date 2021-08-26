@@ -14,12 +14,14 @@ import { AppBar, Grid } from "@material-ui/core";
 import { getCharacters } from "./api/rickmorty/rickmorty.api";
 import { CustomCard } from "../../common/components/card/card.component";
 import { filterStore } from "../../common/stores/filter.store";
+import { useDebounce } from "use-debounce/lib";
 
 export const MainComponent: React.FC = () => {
 	const [tab, setTab] = React.useState(0);
 	const [githubMembers, setGithubMembers] = React.useState<GenericRow[]>([]);
 	const [characters, setCharacters] = React.useState<GenericRow[]>([]);
 	const filter = filterStore((state) => state.filter);
+	const [debounceFilter] = useDebounce(filter, 500);
 	const disableSearch = filterStore((state) => state.setDisabled);
 
 	const onLoadGithub = async () => {
@@ -42,7 +44,7 @@ export const MainComponent: React.FC = () => {
 	React.useEffect(() => {
 		onLoadGithub();
 		onloadRMCharacters();
-	}, [filter]);
+	}, [debounceFilter]);
 
 	return (
 		<>

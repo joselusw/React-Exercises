@@ -54,6 +54,7 @@
     "react-dom": "^16.14.0",
     "react-route": "^1.0.3",
     "react-router-dom": "^5.2.0",
+    "use-debounce": "^7.0.0",
     "zustand": "^3.5.9"
   }
 }
