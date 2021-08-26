@@ -13,14 +13,17 @@ import {
 import { AppBar, Grid } from "@material-ui/core";
 import { getCharacters } from "./api/rickmorty/rickmorty.api";
 import { CustomCard } from "../../common/components/card/card.component";
+import { filterStore } from "../../common/stores/filter.store";
 
 export const MainComponent: React.FC = () => {
 	const [tab, setTab] = React.useState(0);
 	const [githubMembers, setGithubMembers] = React.useState<GenericRow[]>([]);
 	const [characters, setCharacters] = React.useState<GenericRow[]>([]);
+	const filter = filterStore((state) => state.filter);
+	const disableSearch = filterStore((state) => state.setDisabled);
 
 	const onLoadGithub = async () => {
-		const githubResponse = await getMembersByOrgId("lemoncode");
+		const githubResponse = await getMembersByOrgId(filter);
 		const members = mapGithubResponseToVm(githubResponse);
 		setGithubMembers(members);
 	};
@@ -31,17 +34,22 @@ export const MainComponent: React.FC = () => {
 		setCharacters(characters);
 	};
 
+	const onTabChange = (newValue) => {
+		setTab(newValue);
+		disableSearch(newValue !== 0);
+	};
+
 	React.useEffect(() => {
 		onLoadGithub();
 		onloadRMCharacters();
-	}, []);
+	}, [filter]);
 
 	return (
 		<>
 			<AppBar position="static">
 				<TabListComponent
 					value={tab}
-					onChange={setTab}
+					onChange={onTabChange}
 					indicatorColor="secondary"
 					textColor="secondary"
 					variant="fullWidth"
@@ -72,3 +80,6 @@ export const MainComponent: React.FC = () => {
 		</>
 	);
 };
+function useStore(arg0: (state: any) => any) {
+	throw new Error("Function not implemented.");
+}

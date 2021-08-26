@@ -14,7 +14,7 @@ export const CustomCard: React.FC<Props> = (props) => {
 	const { row } = props;
 	return (
 		<Card>
-			<CardMedia component="img" height="300" src={row.avatar} />
+			<CardMedia component="img" height="350" src={row.avatar} />
 			<CardContent>
 				<div>
 					<Typography variant="h5" component="h3" align="center">
@@ -27,7 +27,7 @@ export const CustomCard: React.FC<Props> = (props) => {
 					size="large"
 					onClick={() => window.open(row.url, "_blank")}
 				>
-					Github
+					More Info
 				</Button>
 			</CardActions>
 		</Card>
