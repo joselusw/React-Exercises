@@ -5,18 +5,18 @@ import { ListScene } from "./scenes/list.scene";
 import { StylesProvider } from "@material-ui/core/styles";
 
 export const App = () => {
-  return (
-    <StylesProvider injectFirst>
-      <MainThemeProviderComponent>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <ListScene />
-            </Route>
-            <Route path="/detail/:id"></Route>
-          </Switch>
-        </Router>
-      </MainThemeProviderComponent>
-    </StylesProvider>
-  );
+	return (
+		<StylesProvider>
+			<MainThemeProviderComponent>
+				<Router>
+					<Switch>
+						<Route exact path="/">
+							<ListScene />
+						</Route>
+						<Route path="/detail/:id"></Route>
+					</Switch>
+				</Router>
+			</MainThemeProviderComponent>
+		</StylesProvider>
+	);
 };
