@@ -4,36 +4,36 @@ import {
 	TabListComponent,
 	TabPanelComponent,
 } from "../../common/components/tab";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import GridList from "@material-ui/core/GridList";
-import { jsx, css } from "@emotion/react";
-import { getMembersByOrgId } from "./api/github.api";
-import { createEmptyGenericRow, GenericRow } from "./generic-row.vm";
-import { mapGithubEmployeeListToVm } from "./responses-mapper";
+import { getMembersByOrgId } from "./api/github/github.api";
+import { GenericRow } from "./generic-row.vm";
 import {
-	AppBar,
-	Button,
-	CardActions,
-	Grid,
-	ImageList,
-} from "@material-ui/core";
+	mapGithubResponseToVm,
+	mapRickMortyResponseToVm,
+} from "./responses-mapper";
+import { AppBar, Grid } from "@material-ui/core";
+import { getCharacters } from "./api/rickmorty/rickmorty.api";
+import { CustomCard } from "../../common/components/card/card.component";
 
 export const MainComponent: React.FC = () => {
 	const [tab, setTab] = React.useState(0);
 	const [githubMembers, setGithubMembers] = React.useState<GenericRow[]>([]);
+	const [characters, setCharacters] = React.useState<GenericRow[]>([]);
 
 	const onLoadGithub = async () => {
-		const members = await getMembersByOrgId("lemoncode");
-		const githubVM = mapGithubEmployeeListToVm(members);
-		setGithubMembers(githubVM);
+		const githubResponse = await getMembersByOrgId("lemoncode");
+		const members = mapGithubResponseToVm(githubResponse);
+		setGithubMembers(members);
+	};
+
+	const onloadRMCharacters = async () => {
+		const rickMortyResponse = await getCharacters();
+		const characters = mapRickMortyResponseToVm(rickMortyResponse);
+		setCharacters(characters);
 	};
 
 	React.useEffect(() => {
 		onLoadGithub();
+		onloadRMCharacters();
 	}, []);
 
 	return (
@@ -52,46 +52,22 @@ export const MainComponent: React.FC = () => {
 				</TabListComponent>
 			</AppBar>
 			<TabPanelComponent value={tab} index={0}>
-				<h3>Github</h3>
 				<Grid container spacing={2}>
 					{githubMembers.map((member) => (
 						<Grid item xs={2} sm={4} md={4} key={member.name}>
-							<Card>
-								<CardMedia
-									component="img"
-									height="300"
-									src={member.avatar}
-								/>
-								<CardContent>
-									<div>
-										<Typography
-											variant="h5"
-											component="h3"
-											align="center"
-										>
-											{member.name}
-										</Typography>
-									</div>
-								</CardContent>
-								<CardActions
-									style={{ justifyContent: "center" }}
-								>
-									<Button
-										size="large"
-										onClick={() =>
-											window.open(member.url, "_blank")
-										}
-									>
-										Github
-									</Button>
-								</CardActions>
-							</Card>
+							<CustomCard row={member} />
 						</Grid>
 					))}
 				</Grid>
 			</TabPanelComponent>
 			<TabPanelComponent value={tab} index={1}>
-				<h3>Rick & Morty</h3>
+				<Grid container spacing={2}>
+					{characters.map((member) => (
+						<Grid item xs={2} sm={4} md={4} key={member.name}>
+							<CustomCard row={member} />
+						</Grid>
+					))}
+				</Grid>
 			</TabPanelComponent>
 		</>
 	);

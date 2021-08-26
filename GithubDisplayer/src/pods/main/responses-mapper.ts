@@ -1,19 +1,37 @@
-import { GithubMember } from "./api/github-member.model";
+import { GithubMember } from "./api/github/github-member.model";
+import { RickMortyCharacter } from "./api/rickmorty/rickmorty-member.model";
 import * as viewModel from "./generic-row.vm";
 
-export const mapResponseIntoGenericRow = (
-	apiResponse: GithubMember
+export const mapGithubMemberIntoGenericRow = (
+	gitHubMember: GithubMember
 ): viewModel.GenericRow => {
-	return Boolean(apiResponse)
+	return Boolean(gitHubMember)
 		? {
-				name: apiResponse.login,
-				url: apiResponse.html_url,
-				avatar: apiResponse.avatar_url,
+				name: gitHubMember.login,
+				url: gitHubMember.html_url,
+				avatar: gitHubMember.avatar_url,
 		  }
 		: viewModel.createEmptyGenericRow();
 };
 
-export const mapGithubEmployeeListToVm = (
-	employeeList: GithubMember[]
+export const mapGithubResponseToVm = (
+	apiResponse: GithubMember[]
 ): viewModel.GenericRow[] =>
-	employeeList.map((emp) => mapResponseIntoGenericRow(emp));
+	apiResponse.map((resp) => mapGithubMemberIntoGenericRow(resp));
+
+export const mapRickMortyCharacterIntoGenericRow = (
+	character: RickMortyCharacter
+): viewModel.GenericRow => {
+	return Boolean(character)
+		? {
+				name: character.name,
+				url: `https://rickandmortyapi.com/api/character/${character.id}`,
+				avatar: character.image,
+		  }
+		: viewModel.createEmptyGenericRow();
+};
+
+export const mapRickMortyResponseToVm = (
+	apiResponse: RickMortyCharacter[]
+): viewModel.GenericRow[] =>
+	apiResponse.map((resp) => mapRickMortyCharacterIntoGenericRow(resp));
